@@ -2237,12 +2237,12 @@ def compose_up(compose, args):
         .splitlines()
     )
     diff_hashes = [i for i in hashes if i and i != compose.yaml_hash]
-    if args.force_recreate or len(diff_hashes):
+    if args.force_recreate or (len(diff_hashes) and not args.no_recreate):
         log("recreating: ...")
         down_args = argparse.Namespace(**dict(args.__dict__, volumes=False))
         compose.commands["down"](compose, down_args)
         log("recreating: done\n\n")
-    # args.no_recreate disables check for changes (which is not implemented)
+    # args.no_recreate disables check for changes
 
     podman_command = "run" if args.detach and not args.no_start else "create"
 
